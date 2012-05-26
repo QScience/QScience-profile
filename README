@@ -26,6 +26,7 @@ REQUIREMENTS:
 
 - patterns module (http://drupal.org/project/patterns)
 - token module (http://drupal.org/project/token)
+- macro module
 - pattern (configuration) file(s) you want to execute
 
 Note that pattern files may require additional modules. 
@@ -35,7 +36,7 @@ USAGE:
 
 1) Add patterns and token modules to you site's modules folder
 
-2) Add patterns_profile to Profiles folder
+2) Add qscience_profile to Profiles folder
 
-3) During the installation select Patterns Installation Profile
+3) During the installation select QScience Installation Profile
 

@@ -11,7 +11,7 @@
 * @return
 *   An array of modules to enable.
 */
-function patterns_profile_profile_modules() {
+function qscience_profile_profile_modules() {
 	// Take the opportunity to check a few requirements before the DB is installed
 	$path = conf_path() .'/files';
 	if (!is_dir($path)) {
@@ -38,7 +38,7 @@ function patterns_profile_profile_modules() {
     'color', 'comment', 'help', 'menu', 'taxonomy', 'dblog',
 
     // modules required by patterns
-    'patterns', 'token', 'libraries',
+    'patterns', 'token', 'libraries', 'macro'
 
   );
 }
@@ -52,9 +52,9 @@ function patterns_profile_profile_modules() {
  *   and optional 'language' to override the language selection for
  *   language-specific profiles.
  */
-function patterns_profile_profile_detailTODO() {
+function qscience_profile_profile_detailTODO() {
   return array(
-    'name' => 'Patterns Profile',
+    'name' => 'QScience Profile',
     'description' => 'Configure the site by using patterns'
   );
 }
@@ -68,7 +68,7 @@ function patterns_profile_profile_detailTODO() {
  *   while the values will be displayed to the user in the installer
  *   task list.
  */
-function patterns_profile_profile_task_listTODO() {
+function qscience_profile_profile_task_listTODO() {
   $tasks = array(
     'select-patterns' => st('Select patterns'),
     'patterns-status' => st('Patterns status'),
@@ -79,12 +79,12 @@ function patterns_profile_profile_task_listTODO() {
 /**
 * Implements hook_install_tasks().
 */
-function patterns_profile_install_tasks() {
+function qscience_profile_install_tasks() {
   $tasks = array();
 
   // Add a page for selecting patterns
-  $tasks['patterns_profile_form'] = array(
-   'display_name' => st('Select Pattern'),
+  $tasks['qscience_profile_form'] = array(
+   'display_name' => st('Select Patterns'),
    'type' => 'form',
   );
 
@@ -142,8 +142,8 @@ function patterns_profile_install_tasks() {
  *   modify the $task, otherwise discarded.
  */
 /* TODO: how to get this function called? */
-function patterns_profile_profile_tasks(&$task, $url) {
-  variable_set('patterns_profile_redirect_url', $url);
+function qscienceprofile_profile_tasks(&$task, $url) {
+  variable_set('qscience_profile_redirect_url', $url);
 
   if ($task == 'profile') {
     // Insert default user-defined node types into the database. For a complete
@@ -195,8 +195,8 @@ function patterns_profile_profile_tasks(&$task, $url) {
   }
   
   if ($task == 'select-patterns') {
-    if (variable_get('patterns_profile_executed', FALSE)) {
-      $patterns = variable_get('patterns_profile_selected', array());
+    if (variable_get('qscience_profile_executed', FALSE)) {
+      $patterns = variable_get('qscience_profile_selected', array());
       $failed = array();
       foreach ($patterns as $name) {
         $pattern = patterns_get_pattern($name);
@@ -213,21 +213,21 @@ function patterns_profile_profile_tasks(&$task, $url) {
         $message = t('An error occurred while executing following @pattern:', array('@pattern' => format_plural(count($failed), 'pattern', 'patterns')));
         $message .= theme('item_list', $failed);
         $message .= '<p>'. t('After the installation is complete, you can run patterns again from the patterns administration page.') . '</p>';
-        $message .= '<strong>'. l(t('Proceed with the installation.'), variable_get('patterns_profile_redirect_url', '')) .'</strong>';
+        $message .= '<strong>'. l(t('Proceed with the installation.'), variable_get('qscience_profile_redirect_url', '')) .'</strong>';
         return $message;
       }
     }
     else {
       drupal_set_title(t('Select Patterns'));
-      return drupal_get_form('patterns_profile_form', $url);      
+      return drupal_get_form('qscience_profile_form', $url);      
     }
   }
   
   if ($task == 'patterns-status') {
     $task = 'profile-finished';
-    variable_del('patterns_profile_executed');
-    variable_del('patterns_profile_selected');
-    variable_del('patterns_profile_redirect_url');
+    variable_del('qscience_profile_executed');
+    variable_del('qscience_profile_selected');
+    variable_del('qscience_profile_redirect_url');
   }
 }
 
@@ -237,20 +237,20 @@ function patterns_profile_profile_tasks(&$task, $url) {
  * Allows the profile to alter the site-configuration form. This is
  * called through custom invocation, so $form_state is not populated.
  */
-function patterns_profile_form_alter(&$form, $form_state, $form_id) {
+function qscience_profile_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'install_configure') {    
     // Set default for site name field.
     $form['site_information']['site_name']['#default_value'] = $_SERVER['SERVER_NAME'];
   }
 }
-function patterns_profile_form_alter_old(&$form, $form_state, $form_id) {
+function qscience_profile_form_alter_old(&$form, $form_state, $form_id) {
 	if ($form_id == 'install_configure') {
 		// Set default for site name field.
 		$form['site_information']['site_name']['#default_value'] = $_SERVER['SERVER_NAME'];
 	}
 }
 
-function patterns_profile_form($form, &$form_state, $url) {
+function qscience_profile_form($form, &$form_state, $url) {
 
   $patterns = patterns_get_patterns(true);
   $patterns = $patterns[PATTERNS_STATUS_OK];
@@ -275,10 +275,10 @@ function patterns_profile_form($form, &$form_state, $url) {
     '#value' => t('Save and Continue'),
   );
 //  $form['#action'] = $url;
-//  $form['#redirect'] = variable_get('patterns_profile_redirect_url', '');
+//  $form['#redirect'] = variable_get('qscience_profile_redirect_url', '');
   return $form;
 }
-function patterns_profile_form_old($form, &$form_state, $url) {
+function qscience_profile_form_old($form, &$form_state, $url) {
 
   $patterns = patterns_get_patterns(true);
 	foreach($patterns as $pattern) {
@@ -302,14 +302,14 @@ function patterns_profile_form_old($form, &$form_state, $url) {
 	);
 
 	$form['#action'] = $url;
-	$form['#redirect'] = variable_get('patterns_profile_redirect_url', '');
+	$form['#redirect'] = variable_get('qscience_profile_redirect_url', '');
 	return $form;
 }
 
-function patterns_profile_form_submit($form, &$form_state) {
+function qscience_profile_form_submit($form, &$form_state) {
 
   $patterns = array_filter($form_state['values']['patterns']);
-  variable_set('patterns_profile_selected', $patterns);
+  variable_set('qscience_profile_selected', $patterns);
   
   // combine all patterns into one in order to avoid problems
   // with batch operations
@@ -320,13 +320,13 @@ function patterns_profile_form_submit($form, &$form_state) {
   //include (drupal_get_path('module', 'patterns') . '/patterns.module');
   patterns_start_engine($pattern);
   //patterns_execute_pattern($pattern);
-  variable_set('patterns_profile_executed', TRUE);
-  $form_state['redirect'] = variable_get('patterns_profile_redirect_url', '');
+  variable_set('qscience_profile_executed', TRUE);
+  $form_state['redirect'] = variable_get('qscience_profile_redirect_url', '');
 }
 
-function patterns_profile_form_submit_old($form, &$form_state) {
+function qscience_profile_form_submit_old($form, &$form_state) {
 	$patterns = array_filter($form_state['values']['patterns']);
-	variable_set('patterns_profile_selected', $patterns);
+	variable_set('qscience_profile_selected', $patterns);
 
 	// combine all patterns into one in order to avoid problems
 	// with batch operations
@@ -335,6 +335,7 @@ function patterns_profile_form_submit_old($form, &$form_state) {
 		$pattern->pattern['actions'][] = array('tag' => 'pattern', 'value' => $p);
 	}
 	patterns_execute_pattern($pattern);
-	variable_set('patterns_profile_executed', TRUE);
-	$form_state['redirect'] = variable_get('patterns_profile_redirect_url', '');
+	variable_set('qscience_profile_executed', TRUE);
+	$form_state['redirect'] = variable_get('qscience_profile_redirect_url', '');
 }
+

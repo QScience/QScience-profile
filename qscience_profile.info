@@ -1,5 +1,5 @@
-name = Patterns Installation Profile
-description = Install a default profile and run some patterns
+name = QScience Installation Profile
+description = Install a QScience website, running patterns at installation time
 core = 7.x
 php = "5.3"
 
@@ -27,6 +27,7 @@ dependencies[] = rdf
 dependencies[] = token
 dependencies[] = patterns
 dependencies[] = libraries
+dependencies[] = macro
 
-files[] = patterns_profile.profile
+files[] = qscience_profile.profile
 
