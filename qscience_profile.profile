@@ -6,6 +6,13 @@
  */
  
 /**
+ * Implements <hook_patterns_directory>
+ */ 
+function qscience_profile_patterns_directory() {
+  return drupal_get_path('profile', 'qscience_profile') . '/patterns/';
+}
+
+/**
 * Return an array of the modules to be enabled when this profile is installed.
 *
 * @return
@@ -38,8 +45,14 @@ function qscience_profile_profile_modules() {
     'color', 'comment', 'help', 'menu', 'taxonomy', 'dblog',
 
     // modules required by patterns
-    'patterns', 'token', 'libraries', 'macro'
-
+    'patterns', 
+    'patterns_components', 
+    'patterns_yamlparser', 
+    'patterns_xmlparser',
+    'patterns_phpparser',
+    'token',
+    'libraries',
+    'macro',
   );
 }
 
@@ -142,7 +155,7 @@ function qscience_profile_install_tasks() {
  *   modify the $task, otherwise discarded.
  */
 /* TODO: how to get this function called? */
-function qscienceprofile_profile_tasks(&$task, $url) {
+function qscience_profile_profile_tasks(&$task, $url) {
   variable_set('qscience_profile_redirect_url', $url);
 
   if ($task == 'profile') {
