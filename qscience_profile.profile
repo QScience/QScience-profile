@@ -199,7 +199,7 @@ function qscienceprofile_profile_tasks(&$task, $url) {
       $patterns = variable_get('qscience_profile_selected', array());
       $failed = array();
       foreach ($patterns as $name) {
-        $pattern = patterns_get_pattern($name);
+        $pattern = _patterns_db_get_pattern($name);
         if (!$pattern->status) {
           $failed[] = $pattern->title;
         }
@@ -252,9 +252,10 @@ function qscience_profile_form_alter_old(&$form, $form_state, $form_id) {
 
 function qscience_profile_form($form, &$form_state, $url) {
 
-  $patterns = patterns_get_patterns(true);
+  $patterns = _patterns_io_get_patterns(true);
   $patterns = $patterns[PATTERNS_STATUS_OK];
   // TODO: show a list similar to the Patterns List page.
+  $options = array();
   foreach($patterns as $pattern) {
     $options[$pattern->name] = $pattern->title .'<div class="description">'. $pattern->description .'</div>'; 
   }
@@ -280,7 +281,7 @@ function qscience_profile_form($form, &$form_state, $url) {
 }
 function qscience_profile_form_old($form, &$form_state, $url) {
 
-  $patterns = patterns_get_patterns(true);
+  $patterns = _patterns_io_get_patterns(true);
 	foreach($patterns as $pattern) {
 		$options[$pattern->name] = $pattern->title .'<div class="description">'. $pattern->description .'</description>';
 	}
@@ -313,7 +314,7 @@ function qscience_profile_form_submit($form, &$form_state) {
   
   // combine all patterns into one in order to avoid problems
   // with batch operations
-  $pattern = patterns_get_pattern(array_shift($patterns));
+  $pattern = _patterns_db_get_pattern(array_shift($patterns));
   foreach($patterns as $p) {
     $pattern->pattern['actions'][] = array('tag' => 'pattern', 'value' => $p);
   }
@@ -330,7 +331,7 @@ function qscience_profile_form_submit_old($form, &$form_state) {
 
 	// combine all patterns into one in order to avoid problems
 	// with batch operations
-	$pattern = patterns_get_pattern(array_shift($patterns));
+	$pattern = _patterns_db_get_pattern(array_shift($patterns));
 	foreach($patterns as $p) {
 		$pattern->pattern['actions'][] = array('tag' => 'pattern', 'value' => $p);
 	}
