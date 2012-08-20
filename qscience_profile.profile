@@ -264,8 +264,27 @@ function qscience_profile_form_alter_old(&$form, $form_state, $form_id) {
 }
 
 function qscience_profile_form($form, &$form_state, $url) {
-
-  $patterns = _patterns_io_get_patterns(true);
+	
+	$enable = array();
+	// Hack because <hook_profile_modules> does not enable submodules
+	if (!patterns_utils_is_module_enabled('patterns_components')) {
+		$enable[] = 'patterns_components';
+	}
+	if (!patterns_utils_is_module_enabled('patterns_yamlparser')) {
+		$enable[] = 'patterns_yamlparser';
+	}
+	if (!patterns_utils_is_module_enabled('patterns_xmlparser')) {
+		$enable[] = 'patterns_xmlparser';
+	}
+	if (!patterns_utils_is_module_enabled('patterns_phpparser')) {
+		$enable[] = 'patterns_phpparser';
+	}
+	
+	if (count($enable) > 0) {
+		module_enable($enable);	
+	}
+	
+  $patterns = _patterns_io_get_patterns(true, false);
   $patterns = $patterns[PATTERNS_STATUS_OK];
   // TODO: show a list similar to the Patterns List page.
   $options = array();
